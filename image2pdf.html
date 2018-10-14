@@ -1,0 +1,107 @@
+<html>
+<style>
+td{
+    text-align:center;
+}
+#ww,#hh{
+    width:30px;
+    height:25px;
+    border-top-left-radius:10px;
+    border-bottom-right-radius:10px;
+    outline-color:white;
+}
+#rng0,#rng1{
+    width:70px;
+}
+#printt{
+    height:35px;
+	width:400px;
+	color:white;
+	background-color:green;
+	border-top-left-radius:10px;
+    border-bottom-right-radius:10px;
+}
+input{
+    font-size:12px;
+}
+#cntrlTable{
+    border:1px solid blue;
+    padding:10px;
+    border-top-left-radius:10px;
+    border-bottom-right-radius:10px;
+    background-color:black;
+    color:white;
+    font-size:12px;
+}
+</style>
+<head>
+<title>Image to PDF</title>
+</head>
+<body>
+<table id="cntrlTable">
+<tr>
+<td>Dimension: </td>
+<td><input type="text" id="ww" value="50" readonly><input type="range" id="rng0" min="1" max="100" value="50"></td>
+<td><input type="text" id="hh" value="10" readonly><input type="range" id="rng1" min="1" max="100" value="10"></td>
+</tr>
+<tr>
+<td>Path: </td>
+<td colspan="2"><input type="file" id="fc"></td>
+</tr>
+<tr>
+<td colspan="3"><input id="printt" type="button" value="Print" onclick="printt()"></td>
+</tr>
+</table>
+
+
+<table id="imgTable"></table>
+<script>
+
+var rng0=document.querySelector("#rng0");
+var rng1=document.querySelector("#rng1");
+var ww=document.querySelector("#ww");
+var hh=document.querySelector("#hh");
+		
+rng0.addEventListener("change",function(){
+    ww.value=rng0.value;
+	var imgs=document.querySelectorAll("img");
+	for(var i=0;i<imgs.length;i++){
+	    imgs[i].style.width=ww.value+"%";
+	}
+});
+
+rng1.addEventListener("change",function(){
+    hh.value=rng1.value;
+	var imgs=document.querySelectorAll("img");
+	for(var i=0;i<imgs.length;i++){
+	    imgs[i].style.height=hh.value+"%";
+	}
+});
+
+function insertImage(src){
+    var table=document.querySelector("#imgTable");
+	var tr=document.createElement("tr");
+	var td=document.createElement("td");
+	td.setAttribute("colspan","3");
+	var img=document.createElement("img");
+	img.setAttribute("src",src);
+	img.style.width=ww.value+"%";
+	img.style.height=hh.value+"%";
+	td.appendChild(img);
+	tr.appendChild(td);
+	table.appendChild(tr);
+}
+var fileChooser=document.querySelector("#fc");
+fileChooser.addEventListener("change",function(evt){
+    var tmppath = URL.createObjectURL(evt.target.files[0]);
+    insertImage(tmppath);
+});
+
+function printt(){
+    var table=document.querySelector("#cntrlTable");
+	table.style.display="none";
+    window.print();
+}
+</script>
+</body>
+</html>
