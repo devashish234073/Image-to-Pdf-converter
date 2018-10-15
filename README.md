@@ -5,6 +5,8 @@ Below shown is the UI.
 
 <a href="https://www.youtube.com/watch?v=EcYd4SiKp90&feature=youtu.be" target="_blank">Tutorial</a>
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EcYd4SiKp90" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 ![image](https://user-images.githubusercontent.com/20777854/46924925-9d4a9900-d046-11e8-88cb-c9174ecd158b.png)
 choose images using the file chooser. Use the slider to adjust their sizes. And hit print. 
 Whoala! All the control hides, and only images are shown in the print preview.
