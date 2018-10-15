@@ -1,105 +1,182 @@
 <html>
+<head>
+<meta name="viewport" content="width=device-width initial-scale=1.0">
 <style>
+*{
+    outline:none;
+}
 td{
     text-align:center;
 }
-#ww,#hh{
-    width:30px;
+div{
+    display:block;
+    padding:3px;
+}
+#ww{
+    width:26px;
     height:25px;
     border-top-left-radius:10px;
     border-bottom-right-radius:10px;
-    outline-color:white;
 }
-#rng0,#rng1{
-    width:70px;
+#rng0{
+    width:140px;
+    background-color:black;
 }
 #printt{
-    height:35px;
-	width:400px;
-	color:white;
-	background-color:green;
-	border-top-left-radius:10px;
+    background-color:slateblue;
+    border-top-right-radius:10px;
     border-bottom-right-radius:10px;
+}
+#delett{
+    border-top-left-radius:10px;
+    border-bottom-left-radius:10px;
+    background-color:tomato;
+}
+a{
+    color:orange;
+}
+input[type='button']{
+    box-shadow:2px 2px 7px darkgray;
+    height:35px;
+    width:150px;
+    color:white;
+    border:none;
 }
 input{
     font-size:12px;
+    border:none;
+    background-color:LightGoldenRodYellow;
+    color:blue;
 }
 #cntrlTable{
-    border:1px solid blue;
+    border:1px solid black;
     padding:10px;
     border-top-left-radius:10px;
     border-bottom-right-radius:10px;
-    background-color:black;
-    color:white;
+    background-color:LightGoldenRodYellow;
+    color:green;
     font-size:12px;
+    box-shadow:2px 2px 7px black;
+}
+
+td{
+    height:10px;
 }
 </style>
-<head>
+
 <title>Image to PDF</title>
 </head>
 <body>
 <table id="cntrlTable">
+<tr><td colspan="3"><marquee><a target="_blank" href="http://www.github.com/devashish234073">Visit repo for more</a><br></marquee></td></tr>
+<tr><td colspan="3"></td></tr>
 <tr>
-<td>Dimension: </td>
-<td><input type="text" id="ww" value="50" readonly><input type="range" id="rng0" min="1" max="100" value="50"></td>
-<td><input type="text" id="hh" value="10" readonly><input type="range" id="rng1" min="1" max="100" value="10"></td>
+<td>Scale: </td>
+<td colspan="2"><input type="text" id="ww" value="100" readonly><input type="range" id="rng0" min="1" max="100" value="100"></td>
 </tr>
 <tr>
-<td>Path: </td>
+<td>Add files: </td>
 <td colspan="2"><input type="file" id="fc"></td>
 </tr>
 <tr>
-<td colspan="3"><input id="printt" type="button" value="Print" onclick="printt()"></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="3"><input id="delett" type="button" value="Delete selected Images" onclick="delett()"><input id="printt" type="button" value="Print" onclick="printt()"></td>
 </tr>
 </table>
-
-
 <table id="imgTable"></table>
+
 <script>
+var rng0 = document.querySelector("#rng0");
+var ww = document.querySelector("#ww");
 
-var rng0=document.querySelector("#rng0");
-var rng1=document.querySelector("#rng1");
-var ww=document.querySelector("#ww");
-var hh=document.querySelector("#hh");
-		
-rng0.addEventListener("change",function(){
-    ww.value=rng0.value;
-	var imgs=document.querySelectorAll("img");
-	for(var i=0;i<imgs.length;i++){
-	    imgs[i].style.width=ww.value+"%";
-	}
-});
-
-rng1.addEventListener("change",function(){
-    hh.value=rng1.value;
-	var imgs=document.querySelectorAll("img");
-	for(var i=0;i<imgs.length;i++){
-	    imgs[i].style.height=hh.value+"%";
-	}
-});
-
-function insertImage(src){
-    var table=document.querySelector("#imgTable");
-	var tr=document.createElement("tr");
-	var td=document.createElement("td");
-	td.setAttribute("colspan","3");
-	var img=document.createElement("img");
-	img.setAttribute("src",src);
-	img.style.width=ww.value+"%";
-	img.style.height=hh.value+"%";
-	td.appendChild(img);
-	tr.appendChild(td);
-	table.appendChild(tr);
+function delett() {
+    var imgs = document.querySelectorAll("img");
+    var cnt = 0;
+    for (var i = 0; i < imgs.length; i++) {
+        var isBlue = document.querySelector("#div_" + i).style.backgroundColor === "blue";
+        if (isBlue) {
+            cnt++;
+            document.querySelector("#div_" + i).remove();
+        }
+    }
+    if (cnt === 0) {
+        alert("No image selected.\r\nSelect atleast 1 image by clicking over it.\r");
+    }
 }
-var fileChooser=document.querySelector("#fc");
-fileChooser.addEventListener("change",function(evt){
+
+rng0.addEventListener("change", function() {
+
+    ww.value = rng0.value;
+    var imgs = document.querySelectorAll("img");
+    var cnt = 0;
+    for (var i = 0; i < imgs.length; i++) {
+        var isBlue = document.querySelector("#div_" + i).style.backgroundColor === "blue";
+        if (isBlue) {
+            cnt++;
+            var wh = imgs[i].getAttribute("wh");
+            if (wh == "0,0") {
+                wh = imgs[i].clientWidth + "," + imgs[i].clientHeight;
+                imgs[i].setAttribute("wh", wh);
+            }
+            var tmp = wh.split(",");
+            var val1 = parseInt(tmp[0]) * ww.value / 100;
+            var val2 = parseInt(tmp[1]) * ww.value / 100;
+            imgs[i].style.width = parseInt(val1) + "px";
+            imgs[i].style.height = parseInt(val2) + "px";
+        }
+    }
+
+    if (cnt === 0) {
+        alert("No image selected.\r\nSelect atleast 1 image by clicking over it.\r");
+    }
+});
+
+function setImgClickListener(img, div) {
+    div.addEventListener("click", function() {
+        if (div.style.backgroundColor === "blue") {
+            div.style.backgroundColor = "white";
+            img.style.opacity = "1.0";
+        } else {
+            div.style.backgroundColor = "blue";
+            img.style.opacity = "0.4";
+        }
+    });
+}
+
+function insertImage(src) {
+    var table = document.querySelector("#imgTable");
+    var tr = document.createElement("tr");
+    var div = document.createElement("div");
+    var imgs = document.querySelectorAll("img");
+    div.setAttribute("id", "div_" + imgs.length);
+    var td1 = document.createElement("td");
+    var img = document.createElement("img");
+    img.setAttribute("src", src);
+    img.setAttribute("wh", "0,0");
+    div.appendChild(img);
+    div.style.backgroundColor = "white";
+    td1.appendChild(div);
+    tr.appendChild(td1);
+    table.appendChild(tr);
+    setImgClickListener(img, div);
+}
+var fileChooser = document.querySelector("#fc");
+fileChooser.addEventListener("change", function(evt) {
     var tmppath = URL.createObjectURL(evt.target.files[0]);
     insertImage(tmppath);
 });
 
-function printt(){
-    var table=document.querySelector("#cntrlTable");
-	table.style.display="none";
+function printt() {
+    var table = document.querySelector("#cntrlTable");
+    var divs = document.querySelectorAll("div");
+    var imgs = document.querySelectorAll("img");
+    for (var i = 0; i < divs.length; i++) {
+        divs[i].style.backgroundColor = "white";
+        imgs[i].style.opacity = "1.0";
+    }
+    table.style.display = "none";
     window.print();
 }
 </script>
